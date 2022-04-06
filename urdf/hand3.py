@@ -13,6 +13,25 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
+logId = p.startStateLogging(p.STATE_LOGGING_PROFILE_TIMINGS, "visualShapeBench.json")
+p.loadURDF("plane100.urdf", useMaximalCoordinates=True)
+#disable rendering during creation.
+p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+shift = [0, -0.02, 0]
+meshScale = [0.1, 0.1, 0.1]
+
+visualShapeId = p.createVisualShape(shapeType=p.GEOM_MESH,
+                                    fileName="duck.obj",
+                                    rgbaColor=[1, 1, 1, 1],
+                                    specularColor=[0.4, .4, 0],
+                                    visualFramePosition=shift,
+                                    meshScale=meshScale)
+collisionShapeId = p.createCollisionShape(shapeType=p.GEOM_MESH,
+                                          fileName="duck_vhacd.obj",
+                                          collisionFramePosition=shift,
+                                          meshScale=meshScale)
+
 
 
 startPos = [0,0,10]
@@ -27,34 +46,30 @@ for i in range (10000):
     p.stepSimulation()
     # makes simulation real time 
     time.sleep(1./240.)
-    viz = p.createVisualShape(shapeType=p.GEOM_MESH, fileName=mesh_file)
-    if col_file is None:
-        col = p.createCollisionShape(shapeType=p.GEOM_BOX, halfExtents=[0.001, 0.001, 0.001])
-    else:
-        col = p.createCollisionShape(shapeType=p.GEOM_MESH, fileName=col_file)
-    if pos is None:
-        pos = [0, 0, 0]
-    if orientation is None:
-        orientation = [0, 0, 0, 1]
-    
-
-
-def load_mesh(mesh_file, col_file=None, mass=0, pos=None, orientation=None):
-    viz = p.createVisualShape(shapeType=p.GEOM_MESH, fileName=mesh_file)
-    if col_file is None:
-        col = p.createCollisionShape(shapeType=p.GEOM_BOX, halfExtents=[0.001, 0.001, 0.001])
-    else:
-        col = p.createCollisionShape(shapeType=p.GEOM_MESH, fileName=col_file)
-    if pos is None:
-        pos = [0, 0, 0]
-    if orientation is None:
-        orientation = [0, 0, 0, 1]
-    return p.createMultiBody(baseMass=mass, baseVisualShapeIndex=viz, baseCollisionShapeIndex=col,
-                              basePosition=pos, baseOrientation=orientation)
-
+    for j in range(10000):
+        p.createMultiBody(baseMass=1,
+                      baseInertialFramePosition=[0, 0, 0],
+                      baseCollisionShapeIndex=collisionShapeId,
+                      baseVisualShapeIndex=visualShapeId,
+                      basePosition=[((-10000 / 2) + i) * meshScale[0] * 2,
+                                    (-10000 / 2 + j) * meshScale[1] * 2, 1],
+                      useMaximalCoordinates=True)
 
 # cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
 # print(cubePos,cubeOrn)
+
+p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
+p.stopStateLogging(logId)
+p.setGravity(0, 0, -10)
+p.setRealTimeSimulation(1)
+
+colors = [[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1], [1, 1, 1, 1]]
+currentColor = 0
+
+while (1):
+  time.sleep(1./240.)
+
+
 p.disconnect()
 
 # fix urdf file joints are linked and shouldn't be 
