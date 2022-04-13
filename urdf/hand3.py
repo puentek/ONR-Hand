@@ -37,7 +37,7 @@ for i in range (10000):
     p.setRealTimeSimulation(1)
     # makes simulation real time 
     time.sleep(1./240.)
-
+# add torqye control
 # cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
 # print(cubePos,cubeOrn)
 
