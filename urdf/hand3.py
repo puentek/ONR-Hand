@@ -5,70 +5,41 @@
 # p.connect(p.GUI)
 # p.loadURDF("urdf_screencast.urdf")
 
+import os
 import pybullet as p
 import time
 import pybullet_data
+from pybullet_object_models import ycb_objects
 physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
-logId = p.startStateLogging(p.STATE_LOGGING_PROFILE_TIMINGS, "visualShapeBench.json")
-p.loadURDF("plane100.urdf", useMaximalCoordinates=True)
-#disable rendering during creation.
-p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
-p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-shift = [0, -0.02, 0]
-meshScale = [0.1, 0.1, 0.1]
-
-visualShapeId = p.createVisualShape(shapeType=p.GEOM_MESH,
-                                    fileName="duck.obj",
-                                    rgbaColor=[1, 1, 1, 1],
-                                    specularColor=[0.4, .4, 0],
-                                    visualFramePosition=shift,
-                                    meshScale=meshScale)
-collisionShapeId = p.createCollisionShape(shapeType=p.GEOM_MESH,
-                                          fileName="duck_vhacd.obj",
-                                          collisionFramePosition=shift,
-                                          meshScale=meshScale)
+bunnyId = p.loadSoftBody("bunny.obj")
+useRealTimeSimulation = 1 
 
 
 
 startPos = [0,0,10]
 startOrientation = p.getQuaternionFromEuler([0,0,0])
+# add object in the simulator 
+# boxId = p.loadURDF("cube.urdf", [0,1,0],useFixedBase= True)
 # boxId = p.loadURDF("urdf_screencast.urdf",startPos, startOrientation)
-# make sure to add ground plane ; want your hand to be horizontal 
 #set the center of mass frame (loadURDF sets base link frame) startPos/Ornp.resetBasePositionAndOrientation(boxId, startPos, startOrientation)
+flags = p.URDF_USE_INERTIA_FROM_FILE
+obj_id = p.loadURDF(os.path.join(ycb_objects.getDataPath(),'YcbBanana', "model.urdf"),[-0.13, -0.13, 0.2], useFixedBase= True)
 
 # this runs the simulation 
 #this is where i pass the motor commands 
 for i in range (10000):
+
     p.stepSimulation()
+    p.setRealTimeSimulation(1)
     # makes simulation real time 
     time.sleep(1./240.)
-    for j in range(10000):
-        p.createMultiBody(baseMass=1,
-                      baseInertialFramePosition=[0, 0, 0],
-                      baseCollisionShapeIndex=collisionShapeId,
-                      baseVisualShapeIndex=visualShapeId,
-                      basePosition=[((-10000 / 2) + i) * meshScale[0] * 2,
-                                    (-10000 / 2 + j) * meshScale[1] * 2, 1],
-                      useMaximalCoordinates=True)
 
 # cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
 # print(cubePos,cubeOrn)
-
-p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
-p.stopStateLogging(logId)
-p.setGravity(0, 0, -10)
-p.setRealTimeSimulation(1)
-
-colors = [[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 1], [1, 1, 1, 1]]
-currentColor = 0
-
-while (1):
-  time.sleep(1./240.)
-
 
 p.disconnect()
 
@@ -80,6 +51,6 @@ p.disconnect()
 # urdf should have collision properties 
 #make sure mesh is collection of convex meshes; 
 # can split models or
-# vhacd : plug in for blender 2.8 ; takes model that runs convex model in it 
+# vhacd : plug in for blecander 2.8 ; takes model that runs convex model in it 
 # convex hole need more shophisticated algo; (banana)
 #
