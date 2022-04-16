@@ -14,10 +14,9 @@ physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
-plane = p.loadURDF("data/plane.urdf")
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
-# bunnyId = p.loadSoftBody("bunny.obj")
-# useRealTimeSimulation = 1 
+bunnyId = p.loadSoftBody("bunny.obj")
+useRealTimeSimulation = 1 
 
 
 
@@ -45,14 +44,20 @@ for i in range (10000):
     p.setRealTimeSimulation(1)
     # makes simulation real time 
     time.sleep(1./240.)
-    def control_joint_torque(body, joint, torque):
-        p.setJointMotorControl2(
-                bodyIndex=body,
-                jointIndex=joint,
-                controlMode=p.TORQUE_CONTROL,
-                force=torque) 
-
+# add torqye control
+# cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
+# print(cubePos,cubeOrn)
 
 p.disconnect()
 
-p.change 
+# fix urdf file joints are linked and shouldn't be 
+# motor commands readl pybullet guide 
+#make sure all inertias are correct 
+
+
+# urdf should have collision properties 
+#make sure mesh is collection of convex meshes; 
+# can split models or
+# vhacd : plug in for blecander 2.8 ; takes model that runs convex model in it 
+# convex hole need more shophisticated algo; (banana)
+#
