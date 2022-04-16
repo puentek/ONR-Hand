@@ -14,6 +14,7 @@ physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
+plane = p.loadURDF("data/plane.urdf")
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
 # bunnyId = p.loadSoftBody("bunny.obj")
 # useRealTimeSimulation = 1 
