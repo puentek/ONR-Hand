@@ -15,8 +15,8 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
-bunnyId = p.loadSoftBody("bunny.obj")
-useRealTimeSimulation = 1 
+# bunnyId = p.loadSoftBody("bunny.obj")
+# useRealTimeSimulation = 1 
 
 
 
