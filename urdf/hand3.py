@@ -17,7 +17,7 @@ p.setGravity(0,0,-10)
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
 # bunnyId = p.loadSoftBody("bunny.obj")
 # useRealTimeSimulation = 1 
-
+#ch
 
 
 startPos = [0,0,10]
