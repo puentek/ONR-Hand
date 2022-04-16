@@ -51,14 +51,3 @@ for i in range (10000):
 
 p.disconnect()
 
-# fix urdf file joints are linked and shouldn't be 
-# motor commands readl pybullet guide 
-#make sure all inertias are correct 
-
-
-# urdf should have collision properties 
-#make sure mesh is collection of convex meshes; 
-# can split models or
-# vhacd : plug in for blecander 2.8 ; takes model that runs convex model in it 
-# convex hole need more shophisticated algo; (banana)
-#
