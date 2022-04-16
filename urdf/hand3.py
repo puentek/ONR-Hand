@@ -5,56 +5,49 @@
 # p.connect(p.GUI)
 # p.loadURDF("urdf_screencast.urdf")
 
+import os
 import pybullet as p
 import time
 import pybullet_data
+from pybullet_object_models import ycb_objects
 physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
+bunnyId = p.loadSoftBody("bunny.obj")
+useRealTimeSimulation = 1 
+
 
 
 startPos = [0,0,10]
 startOrientation = p.getQuaternionFromEuler([0,0,0])
+# add object in the simulator 
+# boxId = p.loadURDF("cube.urdf", [0,1,0],useFixedBase= True)
 # boxId = p.loadURDF("urdf_screencast.urdf",startPos, startOrientation)
-# make sure to add ground plane ; want your hand to be horizontal 
 #set the center of mass frame (loadURDF sets base link frame) startPos/Ornp.resetBasePositionAndOrientation(boxId, startPos, startOrientation)
+flags = p.URDF_USE_INERTIA_FROM_FILE
+obj_id = p.loadURDF(os.path.join(ycb_objects.getDataPath(),'YcbBanana', "model.urdf"),[-0.13, -0.13, 0.2], useFixedBase= True)
 
 # this runs the simulation 
 #this is where i pass the motor commands 
+def control_joint_torque(body, joint, torque):
+        p.setJointMotorControl2(
+                bodyIndex=body,
+                jointIndex=joint,
+                controlMode=p.TORQUE_CONTROL,
+                force=torque) 
+
 for i in range (10000):
+
     p.stepSimulation()
+    p.setRealTimeSimulation(1)
     # makes simulation real time 
     time.sleep(1./240.)
-    viz = p.createVisualShape(shapeType=p.GEOM_MESH, fileName=mesh_file)
-    if col_file is None:
-        col = p.createCollisionShape(shapeType=p.GEOM_BOX, halfExtents=[0.001, 0.001, 0.001])
-    else:
-        col = p.createCollisionShape(shapeType=p.GEOM_MESH, fileName=col_file)
-    if pos is None:
-        pos = [0, 0, 0]
-    if orientation is None:
-        orientation = [0, 0, 0, 1]
-    
-
-
-def load_mesh(mesh_file, col_file=None, mass=0, pos=None, orientation=None):
-    viz = p.createVisualShape(shapeType=p.GEOM_MESH, fileName=mesh_file)
-    if col_file is None:
-        col = p.createCollisionShape(shapeType=p.GEOM_BOX, halfExtents=[0.001, 0.001, 0.001])
-    else:
-        col = p.createCollisionShape(shapeType=p.GEOM_MESH, fileName=col_file)
-    if pos is None:
-        pos = [0, 0, 0]
-    if orientation is None:
-        orientation = [0, 0, 0, 1]
-    return p.createMultiBody(baseMass=mass, baseVisualShapeIndex=viz, baseCollisionShapeIndex=col,
-                              basePosition=pos, baseOrientation=orientation)
-
-
+# add torqye control
 # cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
 # print(cubePos,cubeOrn)
+
 p.disconnect()
 
 # fix urdf file joints are linked and shouldn't be 
@@ -65,6 +58,6 @@ p.disconnect()
 # urdf should have collision properties 
 #make sure mesh is collection of convex meshes; 
 # can split models or
-# vhacd : plug in for blender 2.8 ; takes model that runs convex model in it 
+# vhacd : plug in for blecander 2.8 ; takes model that runs convex model in it 
 # convex hole need more shophisticated algo; (banana)
 #
