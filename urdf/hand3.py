@@ -14,7 +14,6 @@ physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 p.setGravity(0,0,-10)
 # useFixedBase = True
-plane = p.loadURDF("data/plane.urdf")
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
 bunnyId = p.loadSoftBody("bunny.obj")
 useRealTimeSimulation = 1 
@@ -51,3 +50,17 @@ for i in range (10000):
 
 p.disconnect()
 
+<<<<<<< HEAD
+=======
+# fix urdf file joints are linked and shouldn't be 
+# motor commands readl pybullet guide 
+#make sure all inertias are correct 
+
+
+# urdf should have collision properties 
+#make sure mesh is collection of convex meshes; 
+# can split models or
+# vhacd : plug in for blecander 2.8 ; takes model that runs convex model in it 
+# convex hole need more shophisticated algo; (banana)
+#
+>>>>>>> e2bfefebd8f4a842837deb2c5eb97faa8f3d8c34
