@@ -31,13 +31,20 @@ obj_id = p.loadURDF(os.path.join(ycb_objects.getDataPath(),'YcbBanana', "model.u
 
 # this runs the simulation 
 #this is where i pass the motor commands 
+def control_joint_torque(body, joint, torque):
+        p.setJointMotorControl2(
+                bodyIndex=body,
+                jointIndex=joint,
+                controlMode=p.TORQUE_CONTROL,
+                force=torque) 
+
 for i in range (10000):
 
     p.stepSimulation()
     p.setRealTimeSimulation(1)
     # makes simulation real time 
     time.sleep(1./240.)
-
+# add torqye control
 # cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
 # print(cubePos,cubeOrn)
 
