@@ -1,9 +1,4 @@
-# import pybullet as p 
-# import pybullet_data 
-# datapath = pybullet_data.getDataPath()
 
-# p.connect(p.GUI)
-# p.loadURDF("urdf_screencast.urdf")
 
 import os
 import pybullet as p
@@ -11,12 +6,14 @@ import time
 import pybullet_data
 from pybullet_object_models import ycb_objects
 physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
-p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
+plane = p.loadURDF("data/plane.urdf")
 p.setGravity(0,0,-10)
+p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
+urdfFlags = p.URDF_USE_SELF_COLLISION
+
 # useFixedBase = True
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
-# bunnyId = p.loadSoftBody("bunny.obj")
-# useRealTimeSimulation = 1 
+quadruped = p.loadURDF("laikago/laikago_toes.urdf",[0,0,.5],[0,0.5,0.5,0], flags = urdfFlags,useFixedBase= False)
 
 
 
@@ -29,8 +26,7 @@ startOrientation = p.getQuaternionFromEuler([0,0,0])
 flags = p.URDF_USE_INERTIA_FROM_FILE
 obj_id = p.loadURDF(os.path.join(ycb_objects.getDataPath(),'YcbBanana', "model.urdf"),[-0.13, -0.13, 0.2], useFixedBase= True)
 
-# this runs the simulation 
-#this is where i pass the motor commands 
+
 for i in range (10000):
 
     p.stepSimulation()
@@ -38,8 +34,12 @@ for i in range (10000):
     # makes simulation real time 
     time.sleep(1./240.)
 
-# cubePos, cubeOrn = p.getBasePositionAndOrientation(boxId)
-# print(cubePos,cubeOrn)
 
+def set_torque(self, torque):
+    p.setJointMotorControl(bodyIndex = self.bodies [self.bodyIndex], jointIndex= self.jointIndex, controlMode = p.TORQUE_CONTROL, 
+    force = torque )
+    #, posotionGain = 0.1, velocityGain = 0.1)
 p.disconnect()
+
+
 
