@@ -31,7 +31,7 @@ jointFrictionForces = 0
 for joint in range(p.getNumJoints(planeId)):
     p.setJointMotorControl2(planeId,joint,p.VELOCITY_CONTROL, targetVelocity=0.02, force = 2.96)
 
-# p.setTorqueControl(planeId,[0,1],p.TORQUE_CONTROL, targetTorque=[0.36,0.36],torqueGains= [0.01,1],velocityGains=[0.1,0.99])
+
 idff = p.addUserDebugParameter("Test force",-2.96, 2.96,0) 
 
 
