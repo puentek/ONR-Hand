@@ -1,6 +1,4 @@
 import os
-
-from zmq import MAX_SOCKETS_DFLT
 import pybullet as p
 import time
 import pybullet_data
@@ -9,13 +7,17 @@ import numpy as np
 physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
 
 #load the plane 
-#plane = p.loadURDF("plane.urdf")
-#TIME STEP
+# plane = p.loadURDF("plane.urdf")
+p.configureDebugVisualizer(p.COV_ENABLE_WIREFRAME, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_GUI, 1)
+p.setRealTimeSimulation(0)
 SIM_TIMESTEP = 1
+p.setTimeStep(SIM_TIMESTEP)
+
 # set the gravity ; can also have this as fixeD
 p.setGravity(0,0,-10)
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
-p.setTimeStep(SIM_TIMESTEP)
 
 # load urdf model 
 planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
@@ -23,9 +25,16 @@ planeId = p.loadURDF("urdf_assem4_1.urdf", useFixedBase = True)
 
 # reset joint state:
 p.resetJointState = (planeId, 1,-0.5,0)
-p.setJointMotorControlArray(planeId,[0,1],p.POSITION_CONTROL, targetPosition=[0,0], positionGains=[0.01,1],velocityGains=[0.1,0.99])
+# p.setJointMotorControlArray(planeId,[0,1],p.POSITION_CONTROL, targetPositions=[0,0], positionGains=[0.01,1],velocityGains=[0.1,0.99])
 
-idff = p.addUserDegugParameter("Test force",-0.01, 0.01,0) 
+jointFrictionForces = 0
+for joint in range(p.getNumJoints(planeId)):
+    p.setJointMotorControl2(planeId,joint,p.VELOCITY_CONTROL, targetVelocity=0.02, force = 2.96)
+
+# p.setTorqueControl(planeId,[0,1],p.TORQUE_CONTROL, targetTorque=[0.36,0.36],torqueGains= [0.01,1],velocityGains=[0.1,0.99])
+idff = p.addUserDebugParameter("Test force",-2.96, 2.96,0) 
+
+
 
 while True:
     try:
@@ -39,6 +48,7 @@ while True:
     except:
         raise 
 
+p.disconnect()
 
 # for i in range (10000):
     
@@ -55,7 +65,14 @@ while True:
 # p.disconnect()
 
 
+# for joint in range(p.getNumJoints(planeId)):
+#     # p.stepSimulation()
+#     # p.setRealTimeSimulation(1)
+#     # # makes simulation real time 
+#     # time.sleep(1./240.)
+#     p.setJointMotorControl2(planeId,joint,p.VELOCITY_CONTROL, targetVelocity=50, force = 2.96)
 
+# # p.disconnect()
 
 
 
