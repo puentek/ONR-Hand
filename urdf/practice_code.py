@@ -361,3 +361,10 @@ class BulletPhysicsEngine(PhysicsEngine):
 
     def apply_force(self, uid, lid, force, pos):
         p.applyExternalForce(uid, lid, force, pos, p.WORLD_FRAME)
+
+
+
+p.configureDebugVisualizer(p.COV_ENABLE_WIREFRAME, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_GUI, 1)
+p.setRealTimeSimulation(0)
