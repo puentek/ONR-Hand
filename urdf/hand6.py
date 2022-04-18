@@ -119,12 +119,10 @@ while True:
         if current_state >= len(state_durations):
             current_state = 0
         state_t = 0
-        pend = [0,1.1,0.1]
-        Fend = [p.readUserDebugParameter(idff),0,0]
-        p.applyExternalForce(planeId,1,Fend, pend, p.WORLD_FRAME)
-        p.addUserDebugLine(pend,np.array(pend)+100*np.array(Fend), lineColorRGB=[1,0,0],lifeTime=0.1,lineWidth=2)
-        p.stepSimulation()
-        time.sleep(1*1e-3)
+        jointFrictionForces = 0
+        for joint in range(p.getNumJoints(planeId)):
+            p.setJointMotorControl2(planeId,joint,p.VELOCITY_CONTROL, targetVelocity=0, force = 0)
+
     p.stepSimulation()
 
 
