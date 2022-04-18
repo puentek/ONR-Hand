@@ -12,4 +12,4 @@ urdfFlags = p.URDF_USE_SELF_COLLISION
 
 
 
-# git hub token: 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
+
